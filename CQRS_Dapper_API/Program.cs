@@ -5,10 +5,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularApp",
+    options.AddPolicy("AngularCRUD",
         policy =>
         {
-            policy.WithOrigins("http://localhost:4200") // Angular app URL
+            policy.WithOrigins("http://localhost:4200")  
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
@@ -16,7 +16,7 @@ builder.Services.AddCors(options =>
 
 // Add services
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddEndpointsApiExplorer(); 
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<DapperContext>();
@@ -30,7 +30,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors("AllowAngularApp");
+app.UseCors("AngularCRUD");
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
