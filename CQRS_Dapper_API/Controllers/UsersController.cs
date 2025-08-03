@@ -23,7 +23,7 @@ namespace CQRS_Dapper_API.Controllers
         {
             var users = await _queryHandler.Handle(new GetAllUsersQuery());
             return Ok(users);
-            }
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
@@ -38,7 +38,9 @@ namespace CQRS_Dapper_API.Controllers
         public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
         {
             var result = await _commandHandler.Handle(command);
-            return result > 0 ? Ok("User created") : BadRequest("Failed to create user");
+            return result > 0
+            ? Ok(new { success = true, message = "User created" })
+            : BadRequest(new { success = false, message = "Failed to create user" });
         }
 
         [HttpPut("{id}")]
@@ -48,14 +50,18 @@ namespace CQRS_Dapper_API.Controllers
                 return BadRequest("ID mismatch");
 
             var result = await _commandHandler.Handle(command);
-            return result > 0 ? Ok("User updated") : NotFound();
+            return result > 0
+            ? Ok(new { success = true, message = "User updated" })
+            : NotFound(new { success = false, message = "User not found" });
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _commandHandler.Handle(new DeleteUserCommand { Id = id });
-            return result > 0 ? Ok("User deleted") : NotFound();
+            return result > 0
+            ? Ok(new { success = true, message = "User deleted" })
+            : NotFound(new { success = false, message = "User not found" });
         }
     }
 }
