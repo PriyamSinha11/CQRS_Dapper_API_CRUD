@@ -19,11 +19,17 @@ namespace CQRS_Dapper_API.CQRS.Handlers
             return await connection.ExecuteAsync(sql, command);
         }
 
-        public async Task<int> Handle(UpdateUserCommand command)
+        public async Task<int> Handle(int id, UpdateUserCommand command)
         {
             var sql = "UPDATE Users SET Name = @Name, Email = @Email, Age = @Age WHERE Id = @Id";
             using var connection = _context.CreateConnection();
-            return await connection.ExecuteAsync(sql, command);
+            return await connection.ExecuteAsync(sql, new
+            {
+                Id = id,
+                command.Name,
+                command.Email,
+                command.Age
+            });
         }
 
         public async Task<int> Handle(DeleteUserCommand command)

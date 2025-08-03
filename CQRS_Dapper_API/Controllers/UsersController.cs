@@ -46,13 +46,10 @@ namespace CQRS_Dapper_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateUserCommand command)
         {
-            if (id != command.Id)
-                return BadRequest("ID mismatch");
-
-            var result = await _commandHandler.Handle(command);
+            var result = await _commandHandler.Handle(id, command);
             return result > 0
-            ? Ok(new { success = true, message = "User updated" })
-            : NotFound(new { success = false, message = "User not found" });
+                ? Ok(new { success = true, message = "User updated" })
+                : NotFound(new { success = false, message = "User not found" });
         }
 
         [HttpDelete("{id}")]
